@@ -1,1 +1,5 @@
 print("Hello World")
+c = 0
+for x in range(0,31):
+    c += x
+print (c)
