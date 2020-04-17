@@ -1,0 +1,254 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<style>
+			a {
+				text-decoration: none;
+				display: inline-block;
+				padding: 8px 16px;
+			}
+
+			a:hover {
+				background-color: #138496;
+				color: white;
+			}
+
+			.previous {  
+				background-color: #17a2b8;
+				color: white;
+			}
+			
+			.round {
+				border-radius: 50%;
+			}
+		</style>	
+		<script type="text/javascript">
+			$(function () {
+				$("#upload,#nextButton5,#lastButton5").bind("click", function () {
+					var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv)$/;
+					if (regex.test($("#fileUpload").val().toLowerCase())) {
+						if (typeof (FileReader) != "undefined") {
+							fullPath = $("#fileUpload").val();
+							var filename = fullPath.replace(/^.*[\\\/]/, '');
+							document.getElementById('File_Name').innerHTML = filename;
+							var reader = new FileReader();
+							reader.onload = function (e) {
+								var table = $("<div />");
+								var rows = e.target.result.split("\n");
+								var row_init = document.getElementById("row_init").value;
+								var row_final = document.getElementById("row_final").value;
+								for (var i = 0; i < rows.length; i++) {							
+									var cells = rows[i].split(",");
+									if (Number(row_init) > cells.length) {
+										//alert("!!! End of index Reached !!!");
+										break;
+									} else {
+										var row = $("<div class=\"row\" />");
+										var cell = $("<div class=\"col-lg-1 \" />");
+										cell.html();
+										row.append(cell);
+										for (var j = Number(row_init); j < Number(row_final); j++) {
+											var cell = $("<div class=\"col-lg-2  border border-dark\" style =\"word-wrap: break-word;background-color: #f2f2f2\" />");
+											cell.html(cells[j]);
+											row.append(cell);
+										}
+										table.append(row);
+									}
+									
+									
+								}
+								$("#dvCSV").html('');
+								$("#dvCSV").append(table);
+							}
+							reader.readAsText($("#fileUpload")[0].files[0]);
+						} else {
+							alert("This browser does not support HTML5.");
+						}
+					} else {
+						alert("Please upload a valid CSV file.");
+					}
+				});
+			});
+			
+			function next5() {
+				var file_available = document.getElementById("fileUpload").value;
+				if (file_available != "") {
+					var row_init = document.getElementById("row_init").value;
+					var row_final = document.getElementById("row_final").value;
+					row_init = Number(row_init) + 5;
+					row_final = Number(row_final) + 5;
+					document.getElementById("row_init").value = row_init;
+					document.getElementById("row_final").value = row_final;
+				}
+				else {
+					alert("!!! csv not uploaded !!!");
+				}
+					
+			}
+			
+			function last5() {
+				var file_available = document.getElementById("fileUpload").value;
+				if (file_available != "") {
+					var row_init = document.getElementById("row_init").value;
+					var row_final = document.getElementById("row_final").value;
+					if(row_init != 0) {
+						row_init = Number(row_init) - 5;
+						row_final = Number(row_final) - 5;
+						document.getElementById("row_init").value = row_init;
+						document.getElementById("row_final").value = row_final;
+					}
+					else {
+						alert("!!! Initial Index reached !!! Cant go back further !!!");
+					}
+				}
+				else {
+					alert("!!! csv not uploaded !!!");
+				}
+				
+			}
+			
+		</script>
+	</head>
+	<body>
+		<script language="javascript">
+			window.onload = function() {
+			document.getElementById("written_readonly").value = '';
+			document.getElementById("fileUpload").value = "";
+			document.getElementById("row_init").value = 0;
+			document.getElementById("row_final").value = 5;
+		}
+		
+		function SubmitClick() {
+			document.getElementById("row_init").value = 0;
+			document.getElementById("row_final").value = 5;
+		}
+		</script>
+		<div class="container-fluid">
+			<div class="row" style="background-color:#262626;min-height:75px;max-height:75px;">
+				<div class="col-lg-12">
+					<button style="visibility:hidden"></button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-1" style="background-color:#262626;min-height:700px">
+					<button style="visibility:hidden"></button>
+				</div>
+				<div class="col-lg-10" style="min-height:1200px">
+					<div class="container-fluid">
+					<br><br>
+					<div class="row">
+						<div class="col-lg-4"></div>
+						<div class="col-lg-4">
+							<form>
+								<div class="form-group text-center">
+								<h2 for="dealCsv">Please enter the required CSV file</h2>	
+									<div class="input-group">
+										<label class="input-group-btn" style="border-radius:15px 0px 0px 30px;">
+											<span class="btn btn-file btn btn-dark">
+											Browse&hellip; <input type="file" style="display: none;"  class="form-control-file" id="fileUpload" accept=".csv">
+											</span>
+										</label>
+										<input type="text" class="form-control" id="written_readonly" readonly style="min-height:37.1333;max-height:37.1333;">
+									</div>
+								</div>
+							</form>
+							<br>
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-lg-4"></div>
+									<div class="col-lg-4">
+										<button type="button" class="btn btn-info" id="upload" value="Upload" onclick="SubmitClick();">Submit</button>
+									</div>
+									<div class="col-lg-4"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4"></div>
+						</div>
+						<hr>
+						<br><br>
+						<div class="row">
+							<div class="col-lg-1 text-center" style="vertical-align: middle;">
+								<a href="#" class="previous round" id="lastButton5" onclick="last5();">&#8249;</a>
+								<label>Last 5</label>
+							</div>
+							<div class="col-lg-10 text-center">
+								<h3 id="File_Name"></h3>
+								<br>
+							</div>
+							<div class="col-lg-1 text-center">
+								<a href="#" class="previous round" id="nextButton5" onclick="next5();">&#8250;</a>
+								<label>Next 5</label>
+							</div>
+						</div>
+						<br><br>
+						<div id="dvCSV">
+						</div>
+						<br><br>
+						<input type="hidden" id="row_init" value="0" />
+						<input type="hidden" id="row_final" value="5" />
+					</div>
+				</div>
+				<div class="col-lg-1" style="background-color:#262626;min-height:1200px">
+					<button style="visibility:hidden"></button>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		function uploadDealcsv () {}; 
+		  /*------ Method for read uploded csv file ------*/
+		  uploadDealcsv.prototype.getCsv = function(e) {				   
+			  let input = document.getElementById('dealCsv');
+			  input.addEventListener('change', function() {
+				if (this.files && this.files[0]) {
+					var myFile = this.files[0];
+					var reader = new FileReader();					
+					reader.addEventListener('load', function (e) {						
+						let csvdata = e.target.result; 
+						parseCsv.getParsecsvdata(csvdata); // calling function for parse csv data 
+					});					
+					reader.readAsBinaryString(myFile);
+				}
+			  });
+			}
+
+			/*------- Method for parse csv data and display --------------*/
+			uploadDealcsv.prototype.getParsecsvdata = function(data) {
+				let parsedata = [];
+				let newLinebrk = data.split("\n");
+				for(let i = 0; i < newLinebrk.length; i++) {
+					parsedata.push(newLinebrk[i].split(","))
+				}
+				console.table(parsedata);
+			}		  
+		  var parseCsv = new uploadDealcsv();
+		  parseCsv.getCsv();
+	</script>
+	<script>
+		$(function() {
+			$(document).on('change', ':file', function() {
+				var input = $(this),
+				numFiles = input.get(0).files ? input.get(0).files.length : 1,
+				label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+				input.trigger('fileselect', [numFiles, label]);
+			});
+
+			$(document).ready( function() {
+				$(':file').on('fileselect', function(event, numFiles, label) {
+					var input = $(this).parents('.input-group').find(':text'),
+					log = numFiles > 1 ? numFiles + ' files selected' : label;
+					if( input.length ) {
+						input.val(log);
+					} else {
+						if( log ) alert(log);
+					}
+				});
+			});
+		});
+	</script>
+</html>
